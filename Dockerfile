@@ -14,10 +14,21 @@ ENV LABELS=""
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    curl wget jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip libicu-dev
+    curl wget jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip libicu-dev \
+    ca-certificates gnupg lsb-release
+
+####################################
+#  Install Docker CLI              #
+####################################
+# This allows the runner to call 'docker' commands
+RUN install -m 0755 -d /etc/apt/keyrings \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+    && chmod a+r /etc/apt/keyrings/docker.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y docker-ce-cli
 
 WORKDIR /usr/bin/actions-runner
-
 
 ###################################
 #  Install the Github SelfRunner  #
