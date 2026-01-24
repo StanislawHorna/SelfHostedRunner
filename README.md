@@ -15,6 +15,7 @@ GitHub does not support assigning runner to the entire User Profile.
             --detach \
             --env GITHUB_OBJECT=<YOUR-GITHUB-ORGANIZATION-OR-PERSONAL-REPOSITORY> \
             --env ACCESS_TOKEN=<YOUR-GITHUB-ACCESS-TOKEN> \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
             --name GH-runner \
             gh-runner-image
 
